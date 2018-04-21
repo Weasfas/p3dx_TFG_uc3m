@@ -1,0 +1,9 @@
+[submodule "amr-ros-config"]
+	path = amr-ros-config
+	url = https://github.com/MobileRobots/amr-ros-config.git
+[submodule "p2os"]
+	path = p2os
+	url = https://github.com/allenh1/p2os.git
+[submodule "rosaria"]
+	path = rosaria
+	url = https://github.com/amor-ros-pkg/rosaria.git

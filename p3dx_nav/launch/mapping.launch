@@ -1,0 +1,11 @@
+<launch>
+	<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" >
+		<param name="xmin" value="-10"/>
+		<param name="xmax" value="10" />
+		<param name="ymin" value="-10" />
+		<param name="ymax" value="10" />
+		
+		<param name="delta" value="0.02" />
+        <remap from="scan" to="/RosAria/sim_lms1xx_1_laserscan"/>
+	</node>
+</launch>

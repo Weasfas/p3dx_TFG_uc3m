@@ -1,0 +1,14 @@
+<launch>
+
+<!-- start sensor-->
+<include file="$(find freenect_launch)/launch/freenect.launch"/>
+
+<!-- Launch kinect and depthimage_to_laser node -->
+  <include file="$(find pioneer_utils)/sensors/kinect_to_laser_low.launch"/>
+
+<!-- Launch kinect and depthimage_to_laser node -->
+  <include file="$(find pioneer_utils)/sensors/kinect_to_laser.launch"/>
+
+  <node pkg="tf" type="static_transform_publisher" name="base_to_camera_broadcaster" args="0.020 0 0.375 0 0 0 base_link camera_link 1" />
+
+</launch>
