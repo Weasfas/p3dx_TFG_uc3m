@@ -8,10 +8,10 @@
 #define KEYCODE_L 0x44
 #define KEYCODE_U 0x41
 #define KEYCODE_D 0x42
-#define KEYCODE_A 0x61
-#define KEYCODE_Z 0x7A
-#define KEYCODE_S 0x73
-#define KEYCODE_X 0x78
+#define KEYCODE_I 0x69
+#define KEYCODE_K 0x6B
+#define KEYCODE_UU 0x75
+#define KEYCODE_J 0x6A
 #define KEYCODE_Q 0x71
 #define KEYCODE_SPACE 0x20
 
@@ -73,8 +73,8 @@ void TeleopRosAria::keyLoop()
   puts("Use arrow keys to move the robot.");
   puts("Press the space bar to stop the robot.");
   puts("Press q to stop the program");
-  puts("a/z - Increase/decrease linear velocity");
-  puts("s/x - Increase/decrease angular velocity");
+  puts("i/k - Increase/decrease linear velocity");
+  puts("u/j - Increase/decrease angular velocity");
   for(;;)
   {
     // get the next event from the keyboard
@@ -112,14 +112,14 @@ void TeleopRosAria::keyLoop()
     	  angular_ = 0;
     	  dirty = true;
     	  break;
-	case KEYCODE_A:
+	case KEYCODE_I:
 	  ROS_DEBUG("INCREASE LINEAR SPEED");
 	  current_linear_ += step_linear_;
 	  sprintf(printable, "Linear speed: %02f", current_linear_);
 	  puts(printable);
 	  dirty=true;
 	  break;
-	case KEYCODE_Z:
+	case KEYCODE_K:
 	  ROS_DEBUG("DECREASE LINEAR SPEED");
           current_linear_ -= step_linear_;
 	  if(current_linear_ < 0)
@@ -128,14 +128,14 @@ void TeleopRosAria::keyLoop()
           puts(printable);
           dirty=true;
           break;
-	case KEYCODE_S:
+	case KEYCODE_UU:
 	  ROS_DEBUG("INCREASE ANGULAR SPEED");
           current_angular_ += step_angular_;
           sprintf(printable, "Angular speed: %02f", current_angular_);
           puts(printable);
           dirty=true;
           break;
-	case KEYCODE_X:
+	case KEYCODE_J:
 	  ROS_DEBUG("DECREASE LINEAR SPEED");
           current_angular_ -= step_angular_;
 	  if(current_angular_ < 0)

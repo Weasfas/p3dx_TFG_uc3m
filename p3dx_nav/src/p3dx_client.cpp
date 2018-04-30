@@ -1,6 +1,13 @@
 #include "ros/ros.h"
 #include "p3dx_nav/ServerClientPelea.h"
+#include <stdlib.h>
+#include <sys/wait.h>
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <ctime>
+
+using namespace std;
 
 int main(int argc, char **argv)
 {
@@ -11,6 +18,14 @@ int main(int argc, char **argv)
     return 1;
   }*/
 
+  time_t t = time(0);
+	struct tm * timeStruct = localtime(&t); 
+
+	ofstream logFile;
+  logFile.open ("client_log.txt", ios::app);
+  logFile << "Client starts at " << (timeStruct->tm_year+1900) << '-' << (timeStruct->tm_mon) << '-'<<  (timeStruct->tm_mday) << '\t' << (timeStruct->tm_hour) << ':' << (timeStruct->tm_min) << ':' << (timeStruct->tm_sec) << std::endl;
+  //logFile.close();
+
   ros::NodeHandle n;
   ros::ServiceClient client = n.serviceClient<p3dx_nav::ServerClientPelea>("p3dx_actions");
   p3dx_nav::ServerClientPelea srv;
@@ -18,46 +33,64 @@ int main(int argc, char **argv)
   int tarea = atoi(argv[1]);
   srv.request.codigo_tarea = tarea;	
 
-  if(tarea==0){ //Moverse hacia delante
+  if(tarea==0){
+    //Enable motors call
+  }else if(tarea==1){ //Moverse hacia delante
     std::vector<std::string> aux;
     aux.push_back(argv[2]);
     aux.push_back(argv[3]);
     aux.push_back(argv[4]);
 
     srv.request.vector_mover = aux;
-    ROS_INFO("Parametros introducidos: Velocidad - %s, Distancia - %s y Direccion - %s",srv.request.vector_mover[0].c_str(),srv.request.vector_mover[1].c_str(),srv.request.vector_mover[2].c_str());
-  }else if (tarea==1){ //Girar
+
+    logFile << "Request send to server  --> Code:1     Ref: Move linear "<< srv.request.vector_mover[0].c_str() << " m/s " << srv.request.vector_mover[1].c_str() << " m " << srv.request.vector_mover[2].c_str() << " direction\n";
+
+  }else if (tarea==2){ //Girar
     std::vector<std::string> aux;
     aux.push_back(argv[2]);
     aux.push_back(argv[3]);
     aux.push_back(argv[4]);
 	
     srv.request.vector_girar = aux;     // 0 --> izq; 1 --> der;
-    ROS_INFO("Parametros introducidos: Velocidad - %s, Grados - %s y Direccion - %s",srv.request.vector_girar[0].c_str(),srv.request.vector_girar[1].c_str(),srv.request.vector_girar[2].c_str());
-  }else if(tarea==2){
+    
+    logFile << "Request send to server  --> Code:2     Ref: Twist robot "<< srv.request.vector_girar[0].c_str() << " deg/s " << srv.request.vector_girar[1].c_str() << " sex. grades " << srv.request.vector_girar[2].c_str() << " direction\n";
+
+  }else if(tarea==3){
     std::vector<std::string> aux;
-	aux.push_back(argv[2]);
+	  aux.push_back(argv[2]);
     aux.push_back(argv[3]);
     aux.push_back(argv[4]);
 
 	srv.request.vector_x_y = aux;
- 	ROS_INFO("Parametros introducidos: Point X - %s, Point Y - %s y Thita - %s",srv.request.vector_x_y[0].c_str(),srv.request.vector_x_y[1].c_str(),srv.request.vector_x_y[2].c_str());
-  }else{ //Tarea desconocida
-    ROS_INFO("Tarea desconocida en cliente");
+
+	logFile << "Request send to server  --> Code:3     Ref: Move to position "<< srv.request.vector_x_y[0].c_str() << " X " << srv.request.vector_x_y[1].c_str() << " Y " << srv.request.vector_x_y[2].c_str() << " grades\n";
+  
+  }else if(tarea==4){
+
+	  logFile << "Request send to server  --> Code:4     Ref: Init mapping process\n";
+
+  }else if(tarea==5){
+
+    logFile << "Request send to server  --> Code:5     Ref: Finish mapping process\n";
+
+  }else if(tarea==6){
+
+	  logFile << "Request send to server  --> Code:6     Ref: Init teleoperation mode\n";
+
+  }else{//Tarea desconocida
+    logFile << "Unknown task in client\n";
+    logFile.close();
     return 1;
   }
   //////////////////////////////RESPUESTA //////////////////////////////
   if (client.call(srv))
   {
-	ROS_INFO("----------RESPUESTA DEL SERVER--------");
-    ROS_INFO("Feedback --> %s", srv.response.feedback);
-    ROS_INFO("Eval --> %d", srv.response.eval);
-  }
-  else
-  {
-    ROS_ERROR("Failed to call service add_two_ints");
+	  logFile << "SERVER RESPONSE --> " << srv.response.feedback << " with code " << srv.response.eval << std::endl;
+  }else{
+    logFile << "Failed to call service";
     return 1;
   }
 
+  logFile.close();
   return 0;
 }

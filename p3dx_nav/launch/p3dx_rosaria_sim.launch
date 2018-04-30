@@ -1,0 +1,22 @@
+<launch>
+	
+    <master auto="start"/>
+
+	<include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
+
+    <node name="RosAria" pkg="rosaria" type="RosAria" args="_port:=10.3.8.10:8101">
+    <rosparam>
+    TicksMM: 128
+    RevCount: 16570
+    DriftFactor: 0
+    trans_accel: 0
+    trans_decel: 0
+    ros_accel: 0
+    ros_decel: 0
+    publish_aria_lasers: true
+    </rosparam>
+    <remap from="~cmd_vel" to="cmd_vel"/>
+    </node>
+
+	
+</launch>
