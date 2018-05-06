@@ -3,7 +3,7 @@
    <!-- <master auto="start"/> -->
 	
     <!-- Starting rosaria driver for motors and encoders -->
-    <include file="$(find rosaria)/launch/p3dx_rosaria_sim.launch"/>
+    <include file="$(find  p3dx_nav)/launch/p3dx_rosaria_sim.launch"/>
 
     <node name="teleop" pkg="p3dx_nav" type="teleop"/>
 

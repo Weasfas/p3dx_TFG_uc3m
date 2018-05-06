@@ -127,8 +127,33 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	}else if(tarea==4){
 		//Up mapping
+
+	logFile << "Server received task  --> Code:4     Ref: Init mapping service\n";
+
+//child
+
+
+	pid_t pid;
+
+	switch(pid = fork()){
+		case 0:
+  		int b = system("roslaunch p3dx_nav mapping.launch"); 
+   		exit(1); 
+	}
+
+	res.feedback =  std::string("Task 4 - Mapping node init successfully...");
+	res.eval = 1;
+
 	}else if(tarea==5){
 		//End mapping
+
+	logFile << "Server received task  --> Code:5     Ref: End mapping service\n";
+
+	system("rosnode kill slam_gmapping"); 
+
+	res.feedback =  std::string("Task 4 - Mapping node ended successfully...");
+	res.eval = 1;
+
 	}else if(tarea==6){//Init tp node
 
     logFile << "Server received task  --> Code:6     Ref: Teleop node\n";

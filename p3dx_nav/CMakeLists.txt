@@ -24,6 +24,9 @@ target_link_libraries(talker ${catkin_LIBRARIES})
 add_executable(listener src/listener.cpp)
 target_link_libraries(listener ${catkin_LIBRARIES})
 
+add_executable(enable_motors src/enable_motors.cpp)
+target_link_libraries(enable_motors ${catkin_LIBRARIES})
+
 ## Build service client and server
 # %Tag(SRVCLIENT)%
 add_executable(p3dx_server src/Nav_waypoints.cpp src/Movimiento_basico.cpp src/p3dx_server.cpp src/Move_base_mov.cpp)
