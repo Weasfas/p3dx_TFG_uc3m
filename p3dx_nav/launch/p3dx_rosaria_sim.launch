@@ -1,8 +1,6 @@
 <launch>
-	
-    <master auto="start"/>
 
-	<include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
+     <include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
 
     <node name="RosAria" pkg="rosaria" type="RosAria">
     <rosparam>

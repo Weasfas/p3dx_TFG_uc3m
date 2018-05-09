@@ -1,0 +1,5 @@
+<launch>
+
+     <include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
+	
+</launch>

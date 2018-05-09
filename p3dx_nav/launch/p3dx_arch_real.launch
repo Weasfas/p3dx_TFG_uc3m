@@ -1,0 +1,13 @@
+<launch>
+	
+    <!-- Starting rosaria driver for motors and encoders -->
+    <include file="$(find  p3dx_nav)/launch/p3dx_rosaria_real.launch"/>
+
+    <!-- Starting move base for navigation -->
+    <include file="$(find p3dx_mb)/navigation/global_navigation_p3dx.launch"/>
+
+	<node name="sensors" pkg="p3dx_nav" type="p3dx_sensors"/>
+
+	<node name="server" pkg="p3dx_nav" type="p3dx_server"/>
+
+</launch>
