@@ -6,9 +6,3 @@ float64 battery_state
 float64 posX
 float64 posY
 float64 posW
-float64 velinX
-float64 velinY
-float64 velinZ
-float64 velanX
-float64 velanY
-float64 velanZ

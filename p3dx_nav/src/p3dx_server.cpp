@@ -18,7 +18,9 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	ofstream logFile;
  	logFile.open ("../catkin_ws/server_log.txt", ios::app);
-  	logFile << "Server starts at " << (timeStruct->tm_year+1900) << '-' << (timeStruct->tm_mon) << '-'<<  (timeStruct->tm_mday) << '\t' << (timeStruct->tm_hour) << ':' << (timeStruct->tm_min) << ':' << (timeStruct->tm_sec) << std::endl;
+  	
+    logFile << "Server starts at " << asctime(timeStruct) << std::endl;
+//logFile << "Server starts at " << (timeStruct->tm_year+1900) << '-' << (timeStruct->tm_mon + 1) << '-'<<  (timeStruct->tm_mday) << '\t' << (timeStruct->tm_hour) << ':' << (timeStruct->tm_min) << ':' << (timeStruct->tm_sec) << std::endl;
 
 	ros::NodeHandle nh;
 
@@ -137,7 +139,8 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	switch(pid = fork()){
 		case 0:
-  		int b = system("roslaunch p3dx_nav mapping.launch"); 
+  		int b = system ("roslaunch p3dx_nav mapping_sim_laser.launch");
+//("roslaunch p3dx_nav mapping_real_kinect.launch"); 
    		exit(1); 
 	}
 
@@ -149,6 +152,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	logFile << "Server received task  --> Code:5     Ref: End mapping service\n";
 
+    system("rosrun map_server map_saver");
 	system("rosnode kill slam_gmapping"); 
 
 	res.feedback =  std::string("Task 4 - Mapping node ended successfully...");

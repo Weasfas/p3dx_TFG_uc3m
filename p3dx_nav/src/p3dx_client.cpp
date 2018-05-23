@@ -19,11 +19,13 @@ int main(int argc, char **argv)
   }*/
 
   time_t t = time(0);
-	struct tm * timeStruct = localtime(&t); 
+  struct tm * timeStruct = localtime(&t); 
 
-	ofstream logFile;
+  ofstream logFile;
   logFile.open ("client_log.txt", ios::app);
-  logFile << "Client starts at " << (timeStruct->tm_year+1900) << '-' << (timeStruct->tm_mon) << '-'<<  (timeStruct->tm_mday) << '\t' << (timeStruct->tm_hour) << ':' << (timeStruct->tm_min) << ':' << (timeStruct->tm_sec) << std::endl;
+  
+  logFile << "Client starts at " << asctime(timeStruct) << std::endl;
+//logFile << "Client starts at " << (timeStruct->tm_year+1900) << '-' << (timeStruct->tm_mon + 1) << '-'<<  (timeStruct->tm_mday) << '\t' << (timeStruct->tm_hour) << ':' << (timeStruct->tm_min) << ':' << (timeStruct->tm_sec) << std::endl;
   //logFile.close();
 
   ros::NodeHandle n;

@@ -1,6 +1,8 @@
 <launch>
 
-    <include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
+    <!--<include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>-->
+
+    <include file="$(find p3dx_mb)/sensors/pioneer3dx-kinect.launch"/>
 
     <node name="RosAria" pkg="rosaria" type="RosAria" args="_port:=/dev/ttyUSB0">
     <rosparam>

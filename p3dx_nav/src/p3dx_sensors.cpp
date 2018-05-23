@@ -11,7 +11,7 @@
 #include <iomanip> // for std :: setprecision and std :: fixed
 
 bool motorState, frontBump, rearBump;
-double battery_state, posX, posY, posW, velinX, velinY, velinZ, velanX, velanY, velanZ;
+double battery_state, posX, posY, posW;
 
 int battery_msg_count = 0, bumper_msg_count = 0;
 
@@ -41,26 +41,32 @@ void poseMessageReceived(const nav_msgs::Odometry& msg)
 void bumperStateMessageReceived(const rosaria::BumperState &msg)
 {
 	int front_size, rear_size;    
-    if (bumper_msg_count == 0)
-    {
+//    if (bumper_msg_count == 0)
+  //  {
 //    	ROS_INFO_STREAM("The front bumpers are "<<msg.front_bumpers<<std::endl<<"The rear bumpers are "<<msg.rear_bumpers);
-    	front_size = sizeof(msg.front_bumpers) / sizeof(bool);
-    	rear_size = sizeof(msg.rear_bumpers) / sizeof(bool);
+    	front_size = 5; //sizeof(msg.front_bumpers) / sizeof(bool);
+    	rear_size = 5; //sizeof(msg.rear_bumpers) / sizeof(bool);
     	//ROS_INFO_STREAM("The front bumpers state are('1' means good): ");
-    	for (int i=0;i<front_size;i++)
-	  if (msg.front_bumpers[i])
+    	for (int i=0;i<front_size;i++){
+	  if (msg.front_bumpers[i]){
     	    frontBump=true;
-	  else
+            break;
+	  }else{
 	    frontBump=false;
+          }
+	}
     	//ROS_INFO_STREAM("The rear bumpers state are('1' means good): ");
 
-    	for (int i=0;i<rear_size;i++)
-	  if (msg.rear_bumpers[i])
+    	for (int i=0;i<rear_size;i++){
+	  if (msg.rear_bumpers[i]){
 	    rearBump=true;
-	  else
+            break;
+	 }else{
 	    rearBump=false;
-    	++bumper_msg_count;
-    }
+	 }
+        }
+//	++bumper_msg_count;
+  //  }
 }
 
 /* check the status of the battery charge */

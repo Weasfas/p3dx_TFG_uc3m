@@ -1,8 +1,6 @@
 <launch>
 
-     <include file="$(find p2os_urdf)/launch/pioneer3dx_urdf.launch"/>
-
-    <node name="RosAria" pkg="rosaria" type="RosAria">
+    <node name="RosAria" pkg="rosaria" type="RosAria" args="_port:=10.3.8.10:8101">
     <rosparam>
     TicksMM: 128
     RevCount: 16570
