@@ -15,5 +15,5 @@ fi
 
 echo "Setting ROS Environment variables: ROS_IP and ROS_MASTER_URI"
 export ROS_IP=10.42.0.13
-export ROS_MASTER_URI=http://10.42.0.13:11311
+export ROS_MASTER_URI=http://10.42.0.1:11311
 . devel/setup.bash

@@ -32,27 +32,6 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
   int tarea = req.codigo_tarea;
 
- /* if(tarea==0){
-	
-	pid_t pid;
-
-	switch(pid = fork()){
-		case 0:
-  		int b = system("rosrun p3dx_nav enable_motors"); 
-   		exit(1); 
-	}
-       int resultado = 1;
-	if(resultado){
- 		res.feedback =  std::string("Tarea - mover finalizada34567890...");
-   		res.eval = 1;
-	}else{
-		res.feedback =  std::string("Tarea - mover no se ha podido finalizar...");
-   		res.eval = 0;
-	}
-	//a = system("rosrun rosaria_client spin_clockwise"); 
-	int a = system("rosnode kill /enable_motors "); 
-*/
-
   if(tarea==0){
 
 	logFile << "Server received task  --> Code:0     Enabling motors...\n";
@@ -139,8 +118,8 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	switch(pid = fork()){
 		case 0:
-  		int b = system ("roslaunch p3dx_nav mapping_sim_laser.launch");
-//("roslaunch p3dx_nav mapping_real_kinect.launch"); 
+  		//int b = system ("roslaunch p3dx_nav mapping_sim_laser.launch");
+                  int b = system ("roslaunch p3dx_nav mapping_real_kinect.launch"); 
    		exit(1); 
 	}
 
@@ -152,7 +131,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
 	logFile << "Server received task  --> Code:5     Ref: End mapping service\n";
 
-    system("rosrun map_server map_saver");
+    //system("rosrun map_server map_saver -f ../catkin_ws/"); Enable the system to create the map (Supposed to be task of High Level)
 	system("rosnode kill slam_gmapping"); 
 
 	res.feedback =  std::string("Task 4 - Mapping node ended successfully...");
