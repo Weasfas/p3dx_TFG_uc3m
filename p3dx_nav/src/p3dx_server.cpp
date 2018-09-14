@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <string.h>
 
 bool run(p3dx_nav::ServerClientPelea::Request  &req,
          p3dx_nav::ServerClientPelea::Response &res)
@@ -30,9 +31,9 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 	
 
 
-  int tarea = req.codigo_tarea;
+   std::string tarea = req.codigo_tarea;
 
-  if(tarea==0){
+  if(strcmp(tarea.c_str(),"startMotor")==0){
 
 	logFile << "Server received task  --> Code:0     Enabling motors...\n";
 	//ROS_INFO_STREAM("Enabling motors...");
@@ -43,7 +44,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 
  	//ROS_INFO_STREAM("Motors are enabled!");
 
-  }else if(tarea==1){ //Moverse hacia delante
+  }else if(strcmp(tarea.c_str(),"moveForward")==0){ //Moverse hacia delante
 
 	float speed = atof (req.vector_mover[0].c_str());
     //ROS_INFO("%f",speed);
@@ -65,7 +66,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 		}
    
    //ROS_INFO("Vector_mover[0] --> %d, Vector_mover[1] --> %d", req.vector_mover[0], req.vector_mover[1]);
-  }else if(tarea==2){ // Girar
+  }else if(strcmp(tarea.c_str(),"twist")==0){ // Girar
 	
 	float speed = atof(req.vector_girar[0].c_str());
 	float degrees = atof(req.vector_girar[1].c_str());
@@ -84,7 +85,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 		}
 	
 	//ROS_INFO("Vector_girar[0] --> %d, Vector_girar[1] --> %d", req.vector_girar[0], req.vector_girar[1]);
-  }else if(tarea==3){
+  }else if(strcmp(tarea.c_str(),"moveTo")==0){
 
 	float pos_x = atof(req.vector_x_y[0].c_str());
 	float pos_y = atof(req.vector_x_y[1].c_str());
@@ -106,7 +107,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 			res.eval = 0;
 		}
 
-	}else if(tarea==4){
+	}else if(strcmp(tarea.c_str(),"startMapping")==0){
 		//Up mapping
 
 	logFile << "Server received task  --> Code:4     Ref: Init mapping service\n";
@@ -119,14 +120,14 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 	switch(pid = fork()){
 		case 0:
   		//int b = system ("roslaunch p3dx_nav mapping_sim_laser.launch");
-                  int b = system ("roslaunch p3dx_nav mapping_real_kinect.launch"); 
+    	        int b = system ("roslaunch p3dx_nav mapping_real_kinect.launch"); 
    		exit(1); 
 	}
 
 	res.feedback =  std::string("Task 4 - Mapping node init successfully...");
 	res.eval = 1;
 
-	}else if(tarea==5){
+	}else if(strcmp(tarea.c_str(),"endMapping")==0){
 		//End mapping
 
 	logFile << "Server received task  --> Code:5     Ref: End mapping service\n";
@@ -137,7 +138,7 @@ bool run(p3dx_nav::ServerClientPelea::Request  &req,
 	res.feedback =  std::string("Task 4 - Mapping node ended successfully...");
 	res.eval = 1;
 
-	}else if(tarea==6){//Init tp node
+	}else if(strcmp(tarea.c_str(),"teleop")==0){//Init tp node
 
     logFile << "Server received task  --> Code:6     Ref: Teleop node\n";
 	

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <string.h>
 
 using namespace std;
 
@@ -32,12 +33,12 @@ int main(int argc, char **argv)
   ros::ServiceClient client = n.serviceClient<p3dx_nav::ServerClientPelea>("p3dx_actions");
   p3dx_nav::ServerClientPelea srv;
 
-  int tarea = atoi(argv[1]);
+  std::string tarea = argv[1];
   srv.request.codigo_tarea = tarea;	
 
-  if(tarea==0){
+  if(strcmp(tarea.c_str(),"startMotor")==0){
     //Enable motors call
-  }else if(tarea==1){ //Moverse hacia delante
+  }else if(strcmp(tarea.c_str(),"moveForward")==0){ //Moverse hacia delante
     std::vector<std::string> aux;
     aux.push_back(argv[2]);
     aux.push_back(argv[3]);
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
 
     logFile << "Request send to server  --> Code:1     Ref: Move linear "<< srv.request.vector_mover[0].c_str() << " m/s " << srv.request.vector_mover[1].c_str() << " m " << srv.request.vector_mover[2].c_str() << " direction\n";
 
-  }else if (tarea==2){ //Girar
+  }else if (strcmp(tarea.c_str(),"twist")==0){ //Girar
     std::vector<std::string> aux;
     aux.push_back(argv[2]);
     aux.push_back(argv[3]);
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
     
     logFile << "Request send to server  --> Code:2     Ref: Twist robot "<< srv.request.vector_girar[0].c_str() << " deg/s " << srv.request.vector_girar[1].c_str() << " sex. grades " << srv.request.vector_girar[2].c_str() << " direction\n";
 
-  }else if(tarea==3){
+  }else if(strcmp(tarea.c_str(),"moveTo")==0){
     std::vector<std::string> aux;
 	  aux.push_back(argv[2]);
     aux.push_back(argv[3]);
@@ -67,15 +68,15 @@ int main(int argc, char **argv)
 
 	logFile << "Request send to server  --> Code:3     Ref: Move to position "<< srv.request.vector_x_y[0].c_str() << " X " << srv.request.vector_x_y[1].c_str() << " Y " << srv.request.vector_x_y[2].c_str() << " grades\n";
   
-  }else if(tarea==4){
+  }else if(strcmp(tarea.c_str(),"startMapping")==0){
 
 	  logFile << "Request send to server  --> Code:4     Ref: Init mapping process\n";
 
-  }else if(tarea==5){
+  }else if(strcmp(tarea.c_str(),"endMapping")==0){
 
     logFile << "Request send to server  --> Code:5     Ref: Finish mapping process\n";
 
-  }else if(tarea==6){
+  }else if(strcmp(tarea.c_str(),"teleop")==0){
 
 	  logFile << "Request send to server  --> Code:6     Ref: Init teleoperation mode\n";
 

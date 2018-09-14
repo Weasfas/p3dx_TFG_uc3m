@@ -1,4 +1,4 @@
-int64 codigo_tarea
+string codigo_tarea
 string[] vector_mover
 string[] vector_girar
 string[] vector_x_y

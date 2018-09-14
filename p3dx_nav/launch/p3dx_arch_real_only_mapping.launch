@@ -1,0 +1,12 @@
+<launch>
+
+    <!-- Starting rosaria driver for motors and encoders and kinect-->
+    <include file="$(find  p3dx_nav)/launch/p3dx_rosaria_real.launch"/>
+
+    <!-- Starting move base for navigation -->
+    <!-- <include file="$(find p3dx_mb)/navigation/global_navigation_p3dx.launch"/> -->
+
+    <!-- Starting gmapping node with kinect data-->
+    <include file="$(find p3dx_nav)/launch/mapping_real_kinect_adjusted.launch"/>
+
+</launch>
