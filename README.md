@@ -1,2 +1,32 @@
-# p3dx_TFG_uc3m
-ROS node developed under IT uc3m
+# Navigation and SLAM with P3DX and Raspberry Pi 3
+This is a project developed for my thesis at the University Carlos III of Madrid for the computer science engineering. The system aims to address the problem of movement on a robotic base and SLAM through a Raspberry Pi board. It is for this reason that it will be necessary a series of elements to be able to have a complete operative system. Among these we find the Raspberry Pi board, a Kinect sensor and a monitoring laptop if we want to evaluate the robot. This systems uses an implementation based on **ROS Kinetic** (Build on **Ubuntu Xenial**) so you will need to have ROS installed in your system. Here you can find a tutorial on [how to intall it](http://wiki.ros.org/ROS/Installation) and [start with the framework](http://wiki.ros.org/ROS/Tutorials).
+
+If you want to use a Raspberry Pi board you will need a MicroSD card and a program like Gparted to format and install the Ubuntu OS into the SD. For this, it is recommended to format the MicroSD card with [Gparted](https://gparted.org/) and install PINN in it. [PINN](https://github.com/procount/pinn) is a usefull program that allow you to administrate OS installations on the Raspberry.
+
+On the other hand, it must be taken into account that the project has strong dependencies with the [ROS navigation stack](http://wiki.ros.org/navigation), [Gmapping node](http://wiki.ros.org/gmapping), [depth_image_to_LaserScan tool](http://wiki.ros.org/depthimage_to_laserscan), [RosAria](http://wiki.ros.org/ROSARIA) and [p2os](http://wiki.ros.org/p2os). In addition, we will need MobileRobots software installed in the Rpi: [Aria](http://robots.mobilerobots.com/wiki/ARIA). However, if you do not have a robot and/or want to test something you can work with a simulation with [MobileSim](http://robots.mobilerobots.com/wiki/MobileSim) or [Gazebo](http://wiki.ros.org/gazebo); bear in mind this last one is not very optimized for the p3dx. Futhermore, it should be noted the global navigation was not implemented, only the local one because the purpose of the systems is to act as an easy interface for a high-level architecture willing to generate automated plans.
+
+Having this clarified, the first thing we need will be the files that implement the architecture, for this we can clone the Github repository in the ROS workspace. We will have to do this for the laptop (in the case of using it) and for the Raspberry Pi. Copied the files, we will have to configure the ROS environment: On the board we run ```source start_pi_p3dx.sh``` and on the laptop ```source start_desk_p3dx.sh```. Once this is done we run on each ```catkin_make``` to build the project. We will have installed everything necessary to use the system.
+
+Now, we need at least three terminals in the monitoring laptop, as they are new bash environments we must run the script again: ```source start_desk_p3dx.sh``` in each one (you may want to add this launch line at the .bashrc file to run it every time you start a new terminal).
+
+In the first terminal we will have to connect to the Raspberry Pi via SSH: ```ssh pi@10.42.0.1``` (laptop and board are in the same network with IP 10.42.0.1 and 10.42.0.13 respectively), inside the Raspberry, with the environment configured and the project built, we will be able to use the system in the following way: first we launch the architecture with ```roslaunch p3dx_nav p3dx_arch_real.launch```, this will launch the core of the architecture: Navigation system, publishers, rosaria and server. Done this, we launch in the second terminal the files for visualization: ```roslaunch p3dx_nav p3dx_rviz.launch``` and in the third RVIZ: ```rviz```. Inside RVIZ we can open the displays of the project folder [/p3dx_nav/rviz_displays](https://github.com/Weasfas/p3dx_TFG_uc3m/tree/master/p3dx_nav/rviz_displays) to visualize the robot and its environment (LaserScans, PointClouds, etc.). Note that if you are using MobileSim you will need to add the correct IP at RosAria launcher (you can find in that folder also the launcher for a simulation environment: ```roslaunch p3dx_arch_sim.launch```) and a tutorial on how to do this ar RosAria documentation.
+
+Once all is launched we can assign tasks through the client making requests to the server (the client node can be executed in both the laptop or the Raspberry Pi):
+
+* **Start engines:** ```rosrun p3dx_nav p3dx_client initMotors```
+* **Linear motion:** ```rosrun p3dx_nav p3dx_client moveForward [Speed] [Distance] [Direction]``` E.g.: rosrun p3dx_nav p3dx_client moveForward 1.0 5.0 1 (This will move 5 meters forward at 1 m/s).
+* **Angular motion:** ```rosrun p3dx_nav p3dx_client twist [Speed] [Degrees] [Direction]``` E.g.: rosrun p3dx_nav p3dx_client twist 1.0 90.0 1 (This will twist the base 90 degrees at 1 degree/s).
+* **2D Movement:** ```rosrun p3dx_nav p3dx_client moveTo [PosX] [PosY] [θ]``` E.g.: rosrun p3dx_nav p3dx_client moveTo 3 -2 45 (This will move the robot to the position x=3, Y=-2 and end with 45º with obstacle avoidance).
+* Mapping: The mapping is divided into several sections:
+
+  * If we want to **start the mapping service** we have to run: ```rosrun p3dx_nav p3dx_client startMapping```
+  
+  * If we want to **finish the mapping service** we have to run: ```rosrun p3dx_nav p3dx_client endMapping```
+  
+  * If we want to create the map with the Kinect readings (try to navigate the area slowly so that the readings are recorded correctly, in RVIZ you will find a display that allows you to see in real time the map that is being generated), we will have to launch, before finishing the service: ```rosrun map_server map_saver -f [File name]``` (the name is not mandatory). This will save the map in the project root folder, or if you have provided a name for the -f modifier containing an address, it will be found at the address provided.
+
+* **Teleoperation:** ```rosrun p3dx_nav p3dx_client teleop``` (use the address keys: ← ↑ → ↓ to control the robotic base and u/j, i/k to decrease or increase the linear and angular velocity, respectively and q to finish the execution of the node).
+
+At any time a high level interface can read the topic */p3dx_sensor* to get the robot's low level state. On the other hand, we can finish the execution of the architecture with ```Control-C```. It is important to emphasize, finally, that, after the execution, we can check the files *server_log.txt* and *client_log.txt* to supervise what has happened in each module.
+
+Here you can find the link to the thesis at UC3M archive (Waiting to be upload)
